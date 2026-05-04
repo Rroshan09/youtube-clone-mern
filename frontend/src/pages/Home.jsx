@@ -1,5 +1,5 @@
 import VideoCard from "../components/VideoCard";
-
+// Home page UI improvements
 const categories = [
   "All",
   "React",
