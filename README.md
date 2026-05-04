@@ -27,5 +27,4 @@ cd frontend
 npm install
 npm run dev
 
-## Screenshots
-(Add screenshots here)
+This project is a full-stack MERN YouTube Clone.
