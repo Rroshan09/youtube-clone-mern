@@ -19,7 +19,7 @@ function VideoPlayer() {
       return null;
     }
   };
-
+//loading fast
   const loggedInUserId = getLoggedInUserId();
 
   const fetchVideo = async () => {
