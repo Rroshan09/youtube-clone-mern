@@ -28,7 +28,6 @@ function Login() {
   }
 };
 
-
   return (
     <div className="auth">
       <h2>Login</h2>

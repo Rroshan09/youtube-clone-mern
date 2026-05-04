@@ -23,7 +23,6 @@ function Register() {
   alert(error.response?.data?.message || "Register failed");
 }
   };
-
   
   return (
     <div className="auth">
