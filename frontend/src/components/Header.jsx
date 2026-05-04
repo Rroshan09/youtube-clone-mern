@@ -1,6 +1,8 @@
 import { Menu, Search, UserCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
+// Header component for navigation
+
 function Header({ onMenuClick, search, setSearch }) {
   const navigate = useNavigate();
 
