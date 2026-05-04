@@ -20,6 +20,7 @@ function Channel() {
     ? JSON.parse(localStorage.getItem("user"))
     : null;
 
+    
   const fetchMyChannel = async () => {
     try {
       const channelRes = await api.get("/channels");
