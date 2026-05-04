@@ -9,6 +9,7 @@ function Sidebar({ sidebarOpen }) {
         <span>Home</span>
       </Link>
 
+
       <div className="sidebar-link">
         <PlaySquare size={20} />
         <span>Shorts</span>

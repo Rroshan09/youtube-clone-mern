@@ -24,6 +24,7 @@ function Register() {
 }
   };
 
+  
   return (
     <div className="auth">
       <h2>Register</h2>

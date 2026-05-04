@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import VideoCard from "../components/VideoCard";
+// Channel page with edit video feature
 
 function Channel() {
   const [channelName, setChannelName] = useState("");

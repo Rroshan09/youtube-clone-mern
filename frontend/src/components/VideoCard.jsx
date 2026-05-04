@@ -11,6 +11,8 @@ function VideoCard({ video }) {
   }}
 />
 
+
+
       <div className="video-info">
         <div className="avatar">
           {video.uploader?.username?.charAt(0) || "U"}
