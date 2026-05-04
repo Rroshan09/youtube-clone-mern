@@ -19,6 +19,7 @@ function Home({ videos = [], category, setCategory, search = "" }) {
           (v) => v.category?.toLowerCase() === category.toLowerCase()
         );
 
+        
   const filteredVideos = categoryFiltered.filter((v) =>
     v.title?.toLowerCase().includes(search.toLowerCase())
   );
