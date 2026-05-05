@@ -13,7 +13,7 @@ function Comments({ videoId }) {
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : null;
-//commit
+
   const fetchComments = async () => {
     try {
       const res = await api.get(`/comments/video/${videoId}`);

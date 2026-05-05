@@ -9,7 +9,7 @@ function Sidebar({ sidebarOpen }) {
         <span>Home</span>
       </Link>
 
-//commit
+
       <div className="sidebar-link">
         <PlaySquare size={20} />
         <span>Shorts</span>

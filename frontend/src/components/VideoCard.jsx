@@ -10,7 +10,7 @@ function VideoCard({ video }) {
     e.currentTarget.src = "https://placehold.co/600x350?text=Video";
   }}
 />
-//commit
+
       <div className="video-info">
         <div className="avatar">
           {video.uploader?.username?.charAt(0) || "U"}

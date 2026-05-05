@@ -15,8 +15,8 @@ function Header({ onMenuClick, search, setSearch }) {
     navigate("/login");
   };
 
-  //commit
-  
+
+
   return (
     <header className="header">
       {/* LEFT */}
