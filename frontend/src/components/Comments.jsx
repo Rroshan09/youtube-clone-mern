@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-// Comment edit functionality
 
 function Comments({ videoId }) {
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
-
   const [editingComment, setEditingComment] = useState(null);
   const [editText, setEditText] = useState("");
 
   const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))
-    : null;
 
   const fetchComments = async () => {
     try {
@@ -35,19 +30,7 @@ function Comments({ videoId }) {
     }
 
     try {
-      await api.post(
-        "/comments",
-        {
-          videoId,
-          text
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
+      await api.post("/comments", { videoId, text });
       setText("");
       fetchComments();
     } catch (error) {
@@ -67,18 +50,7 @@ function Comments({ videoId }) {
     }
 
     try {
-      await api.put(
-        `/comments/${editingComment._id}`,
-        {
-          text: editText
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
+      await api.put(`/comments/${editingComment._id}`, { text: editText });
       setEditingComment(null);
       setEditText("");
       fetchComments();
@@ -91,12 +63,7 @@ function Comments({ videoId }) {
     if (!confirm("Delete this comment?")) return;
 
     try {
-      await api.delete(`/comments/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
+      await api.delete(`/comments/${id}`);
       fetchComments();
     } catch (error) {
       alert(error.response?.data?.message || "Delete failed");
@@ -125,19 +92,13 @@ function Comments({ videoId }) {
           <strong>{comment.user?.username || "User"}</strong>
           <p>{comment.text}</p>
 
-          {user?.id === comment.user?._id && (
+          {token && (
             <div className="comment-actions">
-              <button
-                className="comment-edit-btn"
-                onClick={() => startEditComment(comment)}
-              >
+              <button onClick={() => startEditComment(comment)}>
                 Edit
               </button>
 
-              <button
-                className="comment-delete-btn"
-                onClick={() => deleteComment(comment._id)}
-              >
+              <button onClick={() => deleteComment(comment._id)}>
                 Delete
               </button>
             </div>
@@ -158,10 +119,7 @@ function Comments({ videoId }) {
 
             <div className="edit-actions">
               <button onClick={updateComment}>Save</button>
-              <button
-                className="cancel-btn"
-                onClick={() => setEditingComment(null)}
-              >
+              <button onClick={() => setEditingComment(null)}>
                 Cancel
               </button>
             </div>

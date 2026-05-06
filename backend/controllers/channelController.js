@@ -70,6 +70,33 @@ export const getAllChannels = async (req, res) => {
   }
 };
 
+export const getMyChannel = async (req, res) => {
+  try {
+    const channel = await Channel.findOne({ owner: req.user._id })
+      .populate("owner", "username email avatar")
+      .populate("videos");
+
+    if (!channel) {
+      return res.status(404).json({
+        success: false,
+        message: "No channel found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      channel
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch your channel",
+      error: error.message
+    });
+  }
+};
+
+
 export const getChannelById = async (req, res) => {
   try {
     const channel = await Channel.findById(req.params.id).populate(

@@ -1,5 +1,6 @@
 import Video from "../models/Video.js";
 import Channel from "../models/Channel.js";
+import User from "../models/User.js";
 
 export const createVideo = async (req, res) => {
   try {
@@ -62,6 +63,7 @@ export const createVideo = async (req, res) => {
   }
 };
 
+//  FUNCTION
 export const getAllVideos = async (req, res) => {
   try {
     const { search, category } = req.query;
@@ -69,7 +71,7 @@ export const getAllVideos = async (req, res) => {
     const filter = {};
 
     if (search) {
-      filter.title = { $regex: search, $options: "i" };
+      filter.title = { $regex: search.trim(), $options: "i" };
     }
 
     if (category && category !== "All") {
@@ -94,6 +96,7 @@ export const getAllVideos = async (req, res) => {
     });
   }
 };
+
 
 export const getVideoById = async (req, res) => {
   try {
@@ -212,25 +215,21 @@ export const likeVideo = async (req, res) => {
 
     const userId = req.user._id.toString();
 
-    const alreadyLiked = video.likes.some(
+    const alreadyLiked = video.likes?.some(
       (id) => id.toString() === userId
     );
 
-    const alreadyDisliked = video.dislikes.some(
+    const alreadyDisliked = video.dislikes?.some(
       (id) => id.toString() === userId
     );
 
     if (alreadyLiked) {
-      video.likes = video.likes.filter(
-        (id) => id.toString() !== userId
-      );
+      video.likes = video.likes.filter(id => id.toString() !== userId);
     } else {
       video.likes.push(req.user._id);
 
       if (alreadyDisliked) {
-        video.dislikes = video.dislikes.filter(
-          (id) => id.toString() !== userId
-        );
+        video.dislikes = video.dislikes.filter(id => id.toString() !== userId);
       }
     }
 
@@ -264,25 +263,21 @@ export const dislikeVideo = async (req, res) => {
 
     const userId = req.user._id.toString();
 
-    const alreadyDisliked = video.dislikes.some(
+    const alreadyDisliked = video.dislikes?.some(
       (id) => id.toString() === userId
     );
 
-    const alreadyLiked = video.likes.some(
+    const alreadyLiked = video.likes?.some(
       (id) => id.toString() === userId
     );
 
     if (alreadyDisliked) {
-      video.dislikes = video.dislikes.filter(
-        (id) => id.toString() !== userId
-      );
+      video.dislikes = video.dislikes.filter(id => id.toString() !== userId);
     } else {
       video.dislikes.push(req.user._id);
 
       if (alreadyLiked) {
-        video.likes = video.likes.filter(
-          (id) => id.toString() !== userId
-        );
+        video.likes = video.likes.filter(id => id.toString() !== userId);
       }
     }
 

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
-// Upload validation logic
 
 function Upload() {
   const [title, setTitle] = useState("");
@@ -10,8 +9,31 @@ function Upload() {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
 
+  const [channel, setChannel] = useState(null);
+
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  // ✅ NEW: fetch your channel correctly
+  const fetchMyChannel = async () => {
+    try {
+      const res = await api.get("/channels/my-channel", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setChannel(res.data.channel);
+    } catch (error) {
+      setChannel(null);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchMyChannel();
+    }
+  }, []);
 
   const handleUpload = async () => {
     if (!token) {
@@ -24,20 +46,14 @@ function Upload() {
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    // ❌ OLD LOGIC REMOVED
+    // ✅ NEW LOGIC
+    if (!channel) {
+      alert("Create a channel first");
+      return;
+    }
 
     try {
-      const channelRes = await api.get("/channels");
-
-      const myChannel = channelRes.data.channels.find(
-        (channel) => channel.owner._id === user.id
-      );
-
-      if (!myChannel) {
-        alert("Create a channel first");
-        return;
-      }
-
       await api.post(
         "/videos",
         {
@@ -47,7 +63,7 @@ function Upload() {
           videoUrl,
           category: category || "General",
           description,
-          channel: myChannel._id
+          channel: channel._id // ✅ FIXED
         },
         {
           headers: {

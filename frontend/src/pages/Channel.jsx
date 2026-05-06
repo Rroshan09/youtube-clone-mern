@@ -22,27 +22,17 @@ function Channel() {
 //commitgit add.
 
   const fetchMyChannel = async () => {
-    try {
-      const channelRes = await api.get("/channels");
+  try {
+    const res = await api.get("/channels/my-channel");
 
-      const myChannel = channelRes.data.channels.find(
-        (c) => c.owner._id === user?.id
-      );
-
-      if (myChannel) {
-        setChannel(myChannel);
-
-        const videoRes = await api.get("/videos");
-        const myVideos = videoRes.data.videos.filter(
-          (v) => v.channel?._id === myChannel._id
-        );
-
-        setVideos(myVideos);
-      }
-    } catch (error) {
-      console.log("Failed to fetch channel", error);
-    }
-  };
+    setChannel(res.data.channel);
+    setVideos(res.data.channel.videos || []);
+  } catch (error) {
+    setChannel(null);
+    setVideos([]);
+    console.log("No channel found", error);
+  }
+};
 
   const createChannel = async () => {
     if (!token) {
@@ -172,7 +162,10 @@ function Channel() {
       ) : (
         <>
           <div className="channel-banner">
-            <img src={channel.channelBanner} alt={channel.channelName} />
+            <img
+  src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=300&fit=crop"
+  alt={channel.channelName}
+/>
           </div>
 
           <div className="channel-info">

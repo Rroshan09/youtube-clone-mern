@@ -4,10 +4,11 @@ import User from "../models/User.js";
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: "7d"
+    expiresIn: "7d",
   });
 };
 
+// ✅ REGISTER
 export const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -15,14 +16,7 @@ export const registerUser = async (req, res) => {
     if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Username, email and password are required"
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters"
+        message: "Username, email and password are required",
       });
     }
 
@@ -31,7 +25,7 @@ export const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User already exists with this email"
+        message: "User already exists",
       });
     }
 
@@ -40,28 +34,24 @@ export const registerUser = async (req, res) => {
     const user = await User.create({
       username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     res.status(201).json({
       success: true,
       message: "User registered successfully",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        avatar: user.avatar
-      }
+      user,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Registration failed",
-      error: error.message
+      error: error.message,
     });
   }
 };
 
+// ✅ LOGIN (AUTO CREATE USER - IMPORTANT)
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -69,16 +59,20 @@ export const loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required"
+        message: "Email and password are required",
       });
     }
 
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
+    // 🔥 AUTO CREATE USER IF NOT EXISTS
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      user = await User.create({
+        username: email.split("@")[0],
+        email,
+        password: hashedPassword,
       });
     }
 
@@ -87,7 +81,7 @@ export const loginUser = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({
         success: false,
-        message: "Invalid password"
+        message: "Invalid password",
       });
     }
 
@@ -97,18 +91,13 @@ export const loginUser = async (req, res) => {
       success: true,
       message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        avatar: user.avatar
-      }
+      user,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Login failed",
-      error: error.message
+      error: error.message,
     });
   }
 };

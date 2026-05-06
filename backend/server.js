@@ -7,6 +7,7 @@ import protect from "./middleware/authMiddleware.js";
 import channelRoutes from "./routes/channelRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import process from "process";
 
 dotenv.config();
 
@@ -30,6 +31,11 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+}).on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.log("Port busy, switching to 5001...");
+    app.listen(5001);
+  }
 });
 
 app.get("/api/test", protect, (req, res) => {
